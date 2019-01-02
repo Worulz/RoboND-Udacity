@@ -77,6 +77,11 @@ class RoverState():
         self.near_sample = 0 # Will be set to telemetry value data["near_sample"]
         self.picking_up = 0 # Will be set to telemetry value data["picking_up"]
         self.send_pickup = False # Set to True to trigger rock pickup
+        
+        self.stuck_timer = None
+        self.wait = 4
+        self.is_stuck = False
+        
 # Initialize our rover 
 Rover = RoverState()
 
@@ -91,7 +96,6 @@ fps = None
 @sio.on('telemetry')
 def telemetry(sid, data):
     
-
     global frame_counter, second_counter, fps
     frame_counter+=1
     # Do a rough calculation of frames per second (FPS)
@@ -136,7 +140,6 @@ def telemetry(sid, data):
 
             # Send zeros for throttle, brake and steer and empty images
             send_control((0, 0, 0), '', '')
-            import pdb; pdb.set_trace()
 
         # If you want to save camera images from autonomous driving specify a path
         # Example: $ python drive_rover.py image_folder_path

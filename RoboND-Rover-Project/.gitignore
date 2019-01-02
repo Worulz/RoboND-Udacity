@@ -1,2 +1,12 @@
+# ignore mac files
+.DS_Store
+
+# ignore windows roversim app
 Windows_Roversim/*
+
+# ignore mac roversim app
+Roversim.app
+
+# ignore test data
 data/*
+output/*
