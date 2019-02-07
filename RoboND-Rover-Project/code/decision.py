@@ -143,8 +143,6 @@ def decision_step(Rover):
                 Rover.steer = 0
                 Rover.mode = 'stop'
 
-            if Rover
-
             # sample seen
             if Rover.sample_seen:
                 if Rover.picking_up !=0 :
@@ -177,7 +175,7 @@ def decision_step(Rover):
                     else:
                         Rover.throttle = 0
                         Rover.brake = 0
-                        Rover.steer = avg_rock_angle/3
+                        Rover.steer = avg_rock_angle/6
 
                 else:
                     print('Ive been duped. No sample here')
