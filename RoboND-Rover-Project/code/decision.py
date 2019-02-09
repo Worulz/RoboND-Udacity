@@ -152,7 +152,7 @@ def decision_step(Rover):
 
                 if -15 < avg_rock_angle < 15:
 
-                    if max(Rover.rock_dist) < 20:
+                    if max(Rover.rock_dist) < 10:
                         Rover.throttle = 0
                         Rover.brake = Rover.brake_set
                         Rover.steer = avg_rock_angle
@@ -180,6 +180,34 @@ def decision_step(Rover):
                 else:
                     print('Ive been duped. No sample here')
                     Rover.sample_seen = False
+
+            if Rover.vel <= 0.2 and Rover.vel >= -0.2:
+                if Rover.stuck_timer == None:
+                    # anchor new stuck time a current time.
+                    Rover.stuck_timer = Rover.total_time
+                if Rover.total_time - Rover.stuck_time_time >= Rover.wait:
+                    Rover.is_stuck = True
+
+            if Rover.vel <= 0.2 and Rover.vel >= -0.2 and Rover.is_stuck:
+                if Rover.stuck_time == None:
+                    # anchor new stuck time a current time.
+                    Rover.stuck_time = Rover.total_time
+                if Rover.total_time - Rover.stuck_time_time >= Rover.wait:
+                    Rover.is_stuck = True
+
+            # rover is stuck and rover is not moving forward
+            elif Rover.is_stuck and (Rover.throttle!= 0 or Rover.brake !=0):
+                if Rover.vel >= 0.5 or Rover.vel <= -0.5:
+                    Rover.stuck_time = None
+                    Rover.is_stuck = False
+                    Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
+                else:
+                    Rover.brake = 0
+                    Rover.throttle = -Rover.throttle_set
+                    Rover.steer = 0
+            else:
+                Rover.is_stuck = False
+                Rover.stuck_time = None
 
         # If we're already in "stop" mode then make different decisions
         elif Rover.mode == 'stop':
